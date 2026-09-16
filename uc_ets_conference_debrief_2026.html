@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UC ETS 2026 Master Reference Portal</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        ucblue: '#00356B',
+                        ucgold: '#FFB81C',
+                        uclightblue: '#1B75BC',
+                        warmbg: '#F8FAF9',
+                        cardbg: '#FFFFFF',
+                        slate border: '#E2E8F0',
+                        cerritosgreen: '#005A36'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 650px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 380px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 360px;
+            }
+        }
+        .tab-active {
+            border-bottom: 3px solid #00356B;
+            color: #00356B;
+            font-weight: 700;
+        }
+        .badge-pill {
+            display: inline-block;
+            padding: 0.25rem 0.6rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: 9999px;
+        }
+        /* Custom scrollbar for clean internal panels */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F1F5F9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #CBD5E1;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<!-- Chosen Palette: Warm Sand & Slate Harmony (Background #F8FAF9, Primary UC Navy #00356B, Accent Gold #FFB81C, Cerritos Green #005A36, Slate borders) -->
+<!-- Application Structure Plan: Designed as an interactive multi-view Master Reference Portal. Rather than a linear document, content is organized into 6 task-focused views: 1) Executive Overview & System Updates, 2) Interactive Campus Deep-Dive with filterable categories and quick search, 3) Comparative Data Visualizations with dynamic Chart.js analytics, 4) Cerritos College Strategic Hub (Ideas, Implications & Action Items Matrix), 5) Interactive Q&A & Resource Finder, and 6) Searchable Quick Reference Index Table. This structure allows counselors, faculty, and administrators to quickly pivot between macro system policies, campus-specific details, and actionable local steps. -->
+<!-- Visualization & Content Choices: 1) Transfer Admit Rates & Volumes -> Compare campuses -> Dynamic Chart.js Horizontal Bar -> Canvas rendering with custom tooltips. 2) Campus Metrics & Characteristics -> Compare policy metrics -> Tailwind Cards with dynamic badges. 3) Ideas for Cerritos -> Strategy mapping -> Filterable matrix cards. 4) Q&A -> Categorized accordion with state filter buttons. CONFIRMATION: NO SVG elements used. NO Mermaid JS used. Canvas elements used exclusively for Chart.js charts. -->
+<!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+<body class="bg-[#F8FAF9] text-slate-800 font-sans antialiased min-h-screen flex flex-col">
+
+    <!-- TOP HEADER / BRANDING -->
+    <header class="bg-[#00356B] text-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="bg-[#FFB81C] text-[#00356B] font-extrabold text-xl px-3 py-1 rounded shadow">
+                    UC ETS
+                </div>
+                <div>
+                    <h1 class="text-lg md:text-xl font-bold leading-tight">Ensuring Transfer Success 2026</h1>
+                    <p class="text-xs text-blue-200">System-wide Debrief & Cerritos College Strategic Reference Portal</p>
+                </div>
+            </div>
+            <div class="mt-2 sm:mt-0 flex items-center space-x-2">
+                <span class="text-xs bg-blue-900 border border-blue-700 text-blue-100 px-3 py-1 rounded-full font-medium">
+                    📍 Cycle: Fall 2026–2027
+                </span>
+                <span class="text-xs bg-[#005A36] text-white px-3 py-1 rounded-full font-medium shadow-sm">
+                    🦅 Cerritos Alignment
+                </span>
+            </div>
+        </div>
+
+        <!-- MAIN NAVIGATION TABS -->
+        <nav class="bg-white border-b border-slate-200 shadow-inner overflow-x-auto">
+            <div class="max-w-7xl mx-auto px-4 flex space-x-1 sm:space-x-6 text-sm text-slate-600 whitespace-nowrap">
+                <button onclick="switchTab('overview')" id="nav-overview" class="py-3 px-3 tab-active hover:text-[#00356B] transition-colors flex items-center gap-1.5">
+                    <span>📊</span> Executive Overview
+                </button>
+                <button onclick="switchTab('campuses')" id="nav-campuses" class="py-3 px-3 hover:text-[#00356B] transition-colors flex items-center gap-1.5">
+                    <span>🏛️</span> Campus Deep-Dive
+                </button>
+                <button onclick="switchTab('analytics')" id="nav-analytics" class="py-3 px-3 hover:text-[#00356B] transition-colors flex items-center gap-1.5">
+                    <span>📈</span> Data & Comparison
+                </button>
+                <button onclick="switchTab('cerritos')" id="nav-cerritos" class="py-3 px-3 hover:text-[#00356B] transition-colors flex items-center gap-1.5">
+                    <span>🦅</span> Cerritos Strategic Hub
+                </button>
+                <button onclick="switchTab('qa')" id="nav-qa" class="py-3 px-3 hover:text-[#00356B] transition-colors flex items-center gap-1.5">
+                    <span>❓</span> Q&A & Resources
+                </button>
+                <button onclick="switchTab('index')" id="nav-index" class="py-3 px-3 hover:text-[#00356B] transition-colors flex items-center gap-1.5">
+                    <span>🔍</span> Quick Reference Index
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- ==================== SECTION 1: EXECUTIVE OVERVIEW ==================== -->
+        <section id="tab-overview" class="space-y-6">
+            <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-200">
+                <h2 class="text-2xl font-bold text-[#00356B] mb-2 flex items-center gap-2">
+                    <span>📌</span> Executive Summary
+                </h2>
+                <p class="text-slate-600 leading-relaxed text-sm md:text-base">
+                    The 2026 UC Ensuring Transfer Success (ETS) conference highlighted record-breaking transfer application volumes across the University of California system alongside major structural shifts in transfer pathways. The system-wide UC Dual Admission pilot is being sunset effective January 2027 due to low yield, redirecting system focus toward Associate Degree for Transfer (ADT) expansion across UC campuses. UC Merced launched a comprehensive ADT initiative featuring a $4,000 annual scholarship, while UCLA completed its initial ADT pilot with a remarkable 65% admit rate. To manage severe capacity constraints—where over 50% of applicants concentrate on fewer than 10 majors—campuses like UC Irvine are removing impacted majors (STEM, Business, Psychology) from TAG starting Fall 2028. Concurrently, campuses are strictly enforcing pre-transfer major preparation completion (UC Davis now rescinds offers for missing single prep courses) and cross-checking dual enrollment records via the National Student Clearinghouse to eliminate unreported high school college units.
+                </p>
+            </div>
+
+            <!-- KEY STAT HIGHLIGHT CARDS -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="bg-white p-5 rounded-xl shadow-sm border-l-4 border-[#00356B] border-y border-r border-slate-200">
+                    <p class="text-xs text-slate-500 font-semibold uppercase">System-wide TAG Growth</p>
+                    <p class="text-3xl font-extrabold text-[#00356B] my-1">+34%</p>
+                    <p class="text-xs text-slate-600">From ~16,000 (2022) to 21,400 (2026) applications</p>
+                </div>
+                <div class="bg-white p-5 rounded-xl shadow-sm border-l-4 border-[#FFB81C] border-y border-r border-slate-200">
+                    <p class="text-xs text-slate-500 font-semibold uppercase">Dual Admission Pilot</p>
+                    <p class="text-3xl font-extrabold text-amber-700 my-1">Sunsetting</p>
+                    <p class="text-xs text-slate-600">Ends Jan 2027; replaced by early outreach & ADT</p>
+                </div>
+                <div class="bg-white p-5 rounded-xl shadow-sm border-l-4 border-emerald-600 border-y border-r border-slate-200">
+                    <p class="text-xs text-slate-500 font-semibold uppercase">UCLA ADT Pilot Yield</p>
+                    <p class="text-3xl font-extrabold text-emerald-700 my-1">65% Admit Rate</p>
+                    <p class="text-xs text-slate-600">Compared to UCLA's general 22% transfer admit rate</p>
+                </div>
+                <div class="bg-white p-5 rounded-xl shadow-sm border-l-4 border-rose-600 border-y border-r border-slate-200">
+                    <p class="text-xs text-slate-500 font-semibold uppercase">Major Concentration</p>
+                    <p class="text-3xl font-extrabold text-rose-700 my-1">>50% Applicants</p>
+                    <p class="text-xs text-slate-600">Apply to fewer than 10 majors across campuses</p>
+                </div>
+            </div>
+
+            <!-- CROSS-CAMPUS THEMES & KEY UPDATES -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Cross-Campus Themes -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-lg font-bold text-[#00356B] mb-3 flex items-center gap-2">
+                            <span>🌐</span> Cross-Campus Themes
+                        </h3>
+                        <p class="text-xs text-slate-500 mb-4">Common strategic initiatives and policy patterns identified across multiple UC campuses during ETS 2026.</p>
+                        <ul class="space-y-3 text-sm text-slate-700">
+                            <li class="p-3 bg-slate-50 rounded-lg border border-slate-100">
+                                <strong class="text-blue-900 block font-semibold mb-1">1. ADT Pathway Expansion</strong>
+                                UC Merced, UCLA, UC Riverside, UC Santa Barbara, and UC Santa Cruz are actively building or expanding ADT-guaranteed pathways to streamline junior-level graduation.
+                            </li>
+                            <li class="p-3 bg-slate-50 rounded-lg border border-slate-100">
+                                <strong class="text-blue-900 block font-semibold mb-1">2. Major Concentration & TAG Impaction</strong>
+                                Extreme concentration in top majors (CS, Business, Psychology, Bio) is forcing TAG eliminations (UCI Fall 2028) and strict major prep enforcement (UC Davis, UCSB).
+                            </li>
+                            <li class="p-3 bg-slate-50 rounded-lg border border-slate-100">
+                                <strong class="text-blue-900 block font-semibold mb-1">3. Dual Enrollment Audits</strong>
+                                Campuses (UCLA, UCR, UCOP) are actively auditing applicants against the National Student Clearinghouse to catch unlisted college courses taken during high school.
+                            </li>
+                            <li class="p-3 bg-slate-50 rounded-lg border border-slate-100">
+                                <strong class="text-blue-900 block font-semibold mb-1">4. Multi-Year Housing Guarantees</strong>
+                                2-Year transfer housing guarantees are now established at UCSC, UCSB, UCD, and UCR, backed by significant new residential developments.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Key Policy Updates -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-lg font-bold text-[#00356B] mb-3 flex items-center gap-2">
+                            <span>🔔</span> Urgent Policy Changes & Dates
+                        </h3>
+                        <p class="text-xs text-slate-500 mb-4">Crucial system deadlines and campus policy changes impacting Cerritos College transfer planners.</p>
+                        <div class="space-y-3 text-sm">
+                            <div class="p-3 bg-amber-50 border border-amber-200 rounded-lg text-amber-900">
+                                <strong class="block font-bold">⚠️ UC Davis: Zero Missing Course Policy</strong>
+                                Effective immediately, transfer students missing even 1 required major prep course will have their admission offer rescinded. No missing courses allowed.
+                            </div>
+                            <div class="p-3 bg-red-50 border border-red-200 rounded-lg text-red-900">
+                                <strong class="block font-bold">🚫 UCI Fall 2028 TAG Cuts</strong>
+                                Removing 12 popular majors from TAG starting Fall 2028, including Biological Sciences, Engineering (Aerospace, CS, EE, Mech), Psychology, and Economics.
+                            </div>
+                            <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-lg text-emerald-900">
+                                <strong class="block font-bold">🎓 UC Merced ADT Launch ($4k Award)</strong>
+                                Full launch of ADT guarantees in 6+ majors with a $4,000/yr renewable scholarship ($8k total) and a 60-unit post-transfer degree cap.
+                            </div>
+                            <div class="p-3 bg-blue-50 border border-blue-200 rounded-lg text-blue-900">
+                                <strong class="block font-bold">🧬 Biological Sciences UCP Consolidation</strong>
+                                Effective Fall 2027, Biochemistry, Biology, Cell Bio, and Molecular Bio merge into one Biological Sciences UCP with identical course requirements.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==================== SECTION 2: CAMPUS DEEP DIVE ==================== -->
+        <section id="tab-campuses" class="hidden space-y-6">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <h2 class="text-2xl font-bold text-[#00356B] mb-2 flex items-center gap-2">
+                    <span>🏛️</span> Campus-by-Campus Intelligence Deep-Dive
+                </h2>
+                <p class="text-slate-600 text-sm mb-4">
+                    Explore comprehensive updates synthesized directly from session notes, transcripts, screenshots, and Q&A records. Select a campus and filter by functional area to view specific data, policy changes, tools, and contacts.
+                </p>
+
+                <!-- CONTROLS & FILTERS -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Select Campus / System:</label>
+                        <select id="campus-select" onchange="renderCampusDetail()" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm font-medium focus:ring-2 focus:ring-[#00356B] focus:border-[#00356B]">
+                            <option value="UCOP">System-wide (UCOP)</option>
+                            <option value="UCB">UC Berkeley (UCB)</option>
+                            <option value="UCD">UC Davis (UCD)</option>
+                            <option value="UCI">UC Irvine (UCI)</option>
+                            <option value="UCLA">UCLA</option>
+                            <option value="UCM">UC Merced (UCM)</option>
+                            <option value="UCR">UC Riverside (UCR)</option>
+                            <option value="UCSD">UC San Diego (UCSD)</option>
+                            <option value="UCSB">UC Santa Barbara (UCSB)</option>
+                            <option value="UCSC">UC Santa Cruz (UCSC)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Filter Category:</label>
+                        <select id="category-select" onchange="renderCampusDetail()" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm font-medium focus:ring-2 focus:ring-[#00356B] focus:border-[#00356B]">
+                            <option value="ALL">All Categories</option>
+                            <option value="Results, Data or Outcomes">Results, Data or Outcomes</option>
+                            <option value="Programs, Initiatives & Practices">Programs, Initiatives & Practices</option>
+                            <option value="Academic Planning & Transfer">Academic Planning & Policies</option>
+                            <option value="AI/Technology">AI & Technology</option>
+                            <option value="Tools & Resources">Tools & Resources</option>
+                            <option value="Contacts/Presenters">Contacts & Presenters</option>
+                            <option value="Ideas Relevant to Cerritos College">Ideas for Cerritos College</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Keyword Search:</label>
+                        <input type="text" id="campus-search" oninput="renderCampusDetail()" placeholder="Search campus info (e.g., ADT, GPA, Housing)..." class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-[#00356B] focus:border-[#00356B]">
+                    </div>
+                </div>
+            </div>
+
+            <!-- DYNAMIC CAMPUS DETAIL CONTAINER -->
+            <div id="campus-detail-container" class="space-y-4">
+                <!-- JS dynamically renders content here -->
+            </div>
+        </section>
+
+
+        <!-- ==================== SECTION 3: DATA & COMPARISON ==================== -->
+        <section id="tab-analytics" class="hidden space-y-6">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <h2 class="text-2xl font-bold text-[#00356B] mb-2 flex items-center gap-2">
+                    <span>📈</span> Cross-Campus Analytics & Policy Matrix
+                </h2>
+                <p class="text-slate-600 text-sm">
+                    This section visually compares admission metrics, applicant volumes, yield rates, and key policy frameworks across all 9 UC undergraduate campuses. Use these dynamic comparisons to guide Cerritos College students toward realistic transfer options.
+                </p>
+            </div>
+
+            <!-- CHARTS ROW -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- CHART 1: Admit Rates -->
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-base font-bold text-[#00356B] mb-1">2026 Transfer Admit Rates (%)</h3>
+                        <p class="text-xs text-slate-500 mb-3">Comparison of overall transfer acceptance rates across UC campuses.</p>
+                        <div class="chart-container">
+                            <canvas id="admitRateChart"></canvas>
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-500 italic mt-2">Note: Highly selective campuses (UCB, UCLA, UCI) maintain lower admit rates due to applicant volume spikes in top majors.</p>
+                </div>
+
+                <!-- CHART 2: Transfer Application Volumes -->
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-base font-bold text-[#00356B] mb-1">2026 Transfer Application Volume</h3>
+                        <p class="text-xs text-slate-500 mb-3">Total transfer applications received per campus for the Fall 2026 cycle.</p>
+                        <div class="chart-container">
+                            <canvas id="appVolumeChart"></canvas>
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-500 italic mt-2">UCLA made history as the first U.S. university to cross 30,000 transfer applications in a single cycle.</p>
+                </div>
+            </div>
+
+            <!-- COMPARISON TABLE: POLICIES & GUARANTEES -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <h3 class="text-lg font-bold text-[#00356B] mb-3 flex items-center gap-2">
+                    <span>📋</span> Side-by-Side Campus Policy Comparison
+                </h3>
+                <p class="text-xs text-slate-500 mb-4">Direct comparison of key structural policies: strict major prep, housing guarantees, ADT status, and TAG rules.</p>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-sm">
+                        <thead>
+                            <tr class="bg-slate-100 text-[#00356B] border-b border-slate-300 font-semibold">
+                                <th class="p-3">Campus</th>
+                                <th class="p-3">Strict Major Prep Rules</th>
+                                <th class="p-3">Housing Guarantee</th>
+                                <th class="p-3">ADT Guarantee Status</th>
+                                <th class="p-3">TAG Availability / Changes</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-200">
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 font-bold text-slate-800">UC Berkeley</td>
+                                <td class="p-3">Strict evaluation for competitive majors</td>
+                                <td class="p-3"><span class="badge-pill bg-blue-100 text-blue-800">1-Year Guarantee</span></td>
+                                <td class="p-3 text-slate-500">No formal ADT guarantee</td>
+                                <td class="p-3 text-slate-500">No TAG offered</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 font-bold text-slate-800">UC Davis</td>
+                                <td class="p-3 font-semibold text-rose-700">Zero missing prep allowed (rescinds enforced)</td>
+                                <td class="p-3"><span class="badge-pill bg-emerald-100 text-emerald-800">2-Year Guarantee</span></td>
+                                <td class="p-3 text-slate-600">In planning stages</td>
+                                <td class="p-3 text-slate-700">TAG available for major list</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 font-bold text-slate-800">UC Irvine</td>
+                                <td class="p-3">Comprehensive review for 10 impacted majors</td>
+                                <td class="p-3 text-slate-600">Varies by availability</td>
+                                <td class="p-3 text-slate-600">In planning for 2028</td>
+                                <td class="p-3 font-semibold text-amber-700">Removing 12 majors from TAG in Fall 2028</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 font-bold text-slate-800">UCLA</td>
+                                <td class="p-3">Highly selective across top 9 majors</td>
+                                <td class="p-3 text-slate-600">On-campus housing options</td>
+                                <td class="p-3"><span class="badge-pill bg-purple-100 text-purple-800">Active Pilot (65% admit)</span></td>
+                                <td class="p-3 text-slate-500">No TAG offered</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 font-bold text-slate-800">UC Merced</td>
+                                <td class="p-3">Flexible entry options (e.g., CS post-precalc)</td>
+                                <td class="p-3"><span class="badge-pill bg-blue-100 text-blue-800">Transfer Promise Housing</span></td>
+                                <td class="p-3"><span class="badge-pill bg-emerald-100 text-emerald-800">Full Launch + $4k/yr Award</span></td>
+                                <td class="p-3 text-slate-700">TAG open to all majors</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 font-bold text-slate-800">UC Riverside</td>
+                                <td class="p-3">Strict prep for CS & Credential pathways</td>
+                                <td class="p-3"><span class="badge-pill bg-emerald-100 text-emerald-800">2-Year Guarantee</span></td>
+                                <td class="p-3 text-slate-600">Faculty review in progress</td>
+                                <td class="p-3 font-semibold text-emerald-700">TAG available for ALL majors (CS/Psych)</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 font-bold text-slate-800">UC San Diego</td>
+                                <td class="p-3">Major prep verified via UCSD major site</td>
+                                <td class="p-3 text-slate-600">On-campus options</td>
+                                <td class="p-3 text-slate-600">In planning stages</td>
+                                <td class="p-3 text-slate-500">No TAG offered</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 font-bold text-slate-800">UC Santa Barbara</td>
+                                <td class="p-3">Adding selective review to Stats/Actuarial</td>
+                                <td class="p-3"><span class="badge-pill bg-emerald-100 text-emerald-800">2-Year Guarantee</span></td>
+                                <td class="p-3 text-slate-600">In planning for 2028</td>
+                                <td class="p-3 text-slate-700">TAG available (selective prep required)</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 font-bold text-slate-800">UC Santa Cruz</td>
+                                <td class="p-3">Major prep required for STEM/selective</td>
+                                <td class="p-3"><span class="badge-pill bg-emerald-100 text-emerald-800">2-Year Guarantee</span></td>
+                                <td class="p-3 text-slate-600">In planning for 2028</td>
+                                <td class="p-3 text-slate-700">TAG available</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==================== SECTION 4: CERRITOS COLLEGE STRATEGIC HUB ==================== -->
+        <section id="tab-cerritos" class="hidden space-y-6">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 border-l-4 border-[#005A36]">
+                <h2 class="text-2xl font-bold text-[#005A36] mb-2 flex items-center gap-2">
+                    <span>🦅</span> Cerritos College Actionable Intelligence Hub
+                </h2>
+                <p class="text-slate-600 text-sm">
+                    Translating UC ETS 2026 system trends into specific, actionable local strategies for Cerritos College leadership, counseling, articulation, and student services departments.
+                </p>
+            </div>
+
+            <!-- SUB-TABS FOR CERRITOS SECTION -->
+            <div class="flex space-x-2 border-b border-slate-200 bg-white p-2 rounded-lg">
+                <button onclick="switchCerritosSubTab('ideas')" id="csub-ideas" class="px-4 py-2 text-sm font-bold bg-[#005A36] text-white rounded-md transition">
+                    💡 Ideas & Opportunities (3)
+                </button>
+                <button onclick="switchCerritosSubTab('implications')" id="csub-implications" class="px-4 py-2 text-sm font-semibold text-slate-600 hover:text-[#005A36] rounded-md transition">
+                    🏛️ Departmental Implications
+                </button>
+                <button onclick="switchCerritosSubTab('actions')" id="csub-actions" class="px-4 py-2 text-sm font-semibold text-slate-600 hover:text-[#005A36] rounded-md transition">
+                    ✅ Action Items Matrix
+                </button>
+            </div>
+
+            <!-- CERRITOS SUB-SECTION 1: IDEAS & OPPORTUNITIES -->
+            <div id="cerritos-ideas-panel" class="space-y-4">
+                <!-- IDEA 1 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full">Idea #1 • Source: UC Merced</span>
+                        <span class="text-xs text-slate-500 font-semibold">Priority: High</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-[#00356B] mb-2">1. UC Merced ADT Guarantee & Scholarship Alignment</h3>
+                    <p class="text-sm text-slate-700 mb-3">
+                        <strong>What They Are Doing:</strong> UC Merced launched a full ADT guarantee offering guaranteed admission, a $4,000/year renewable scholarship ($8,000 total), and a 60-unit completion cap post-transfer for ADTs in Biology, Anthropology, Liberal Studies, History, Political Science, and Social Justice.
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs bg-slate-50 p-4 rounded-lg border border-slate-200 mb-3">
+                        <div>
+                            <strong class="text-slate-800 block">Problem Addressed:</strong>
+                            High transfer costs and excess unit accumulation beyond 60 units post-transfer.
+                        </div>
+                        <div>
+                            <strong class="text-slate-800 block">Cerritos Relevance:</strong>
+                            Directly benefits Cerritos ADT earners seeking a clear, guaranteed, highly affordable UC pathway.
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap justify-between items-center text-xs pt-2 border-t border-slate-100 text-slate-600">
+                        <span><strong>Departments Involved:</strong> Transfer Center, Counseling, Articulation Officer</span>
+                        <span class="font-bold text-[#005A36]">Suggested Next Step: Map Cerritos existing ADTs in Biology, History, PoliSci, & Social Justice to UCM's ADT list.</span>
+                    </div>
+                </div>
+
+                <!-- IDEA 2 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1 rounded-full">Idea #2 • Source: UCLA / UCR / UCOP</span>
+                        <span class="text-xs text-slate-500 font-semibold">Priority: Critical Compliance</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-[#00356B] mb-2">2. Dual Enrollment Auditing & Advising Disclosure Protocols</h3>
+                    <p class="text-sm text-slate-700 mb-3">
+                        <strong>What They Are Doing:</strong> Checking application data against National Student Clearinghouse records and factoring all dual enrollment GPAs directly into transfer evaluation.
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs bg-slate-50 p-4 rounded-lg border border-slate-200 mb-3">
+                        <div>
+                            <strong class="text-slate-800 block">Problem Addressed:</strong>
+                            Rescinded transfer offers due to unlisted high school college courses or repeated C-grade coursework.
+                        </div>
+                        <div>
+                            <strong class="text-slate-800 block">Cerritos Relevance:</strong>
+                            Cerritos high school dual enrollment students need clear warnings that college courses taken during high school permanently impact UC transfer GPAs.
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap justify-between items-center text-xs pt-2 border-t border-slate-100 text-slate-600">
+                        <span><strong>Departments Involved:</strong> Dual Enrollment Office, High School Outreach, Counseling, Admissions & Records</span>
+                        <span class="font-bold text-[#005A36]">Suggested Next Step: Create a mandatory "Dual Enrollment to UC Transfer" disclosure form for dual enrollment students.</span>
+                    </div>
+                </div>
+
+                <!-- IDEA 3 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="bg-purple-100 text-purple-800 text-xs font-bold px-3 py-1 rounded-full">Idea #3 • Source: UC Irvine & UC Riverside</span>
+                        <span class="text-xs text-slate-500 font-semibold">Priority: Medium</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-[#00356B] mb-2">3. Interactive Major Exploration & Alternative Pathway Mapping</h3>
+                    <p class="text-sm text-slate-700 mb-3">
+                        <strong>What They Are Doing:</strong> Utilizing online interactive major quizzes and career-centered major mapping tools to direct students away from hyper-impacted majors toward non-impacted alternatives.
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs bg-slate-50 p-4 rounded-lg border border-slate-200 mb-3">
+                        <div>
+                            <strong class="text-slate-800 block">Problem Addressed:</strong>
+                            Over 50% of transfer applicants concentrate on under 10 hyper-competitive majors, causing high rejection rates.
+                        </div>
+                        <div>
+                            <strong class="text-slate-800 block">Cerritos Relevance:</strong>
+                            Helps Cerritos counselors guide students to alternative majors with higher admit rates within the same discipline.
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap justify-between items-center text-xs pt-2 border-t border-slate-100 text-slate-600">
+                        <span><strong>Departments Involved:</strong> Counseling, Career Services, Transfer Center</span>
+                        <span class="font-bold text-[#005A36]">Suggested Next Step: Embed UCI's Major Quiz and UCR's Career-Major Map links into Cerritos Transfer Center advising workshops.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CERRITOS SUB-SECTION 2: IMPLICATIONS -->
+            <div id="cerritos-implications-panel" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+                    <h4 class="font-bold text-[#00356B] text-base mb-2">💬 Counseling & Student Services</h4>
+                    <p class="text-sm text-slate-700 leading-relaxed">
+                        Advising workflows must adapt immediately to UCI’s Fall 2028 TAG removals and UC Davis’s strict zero-missing-course major prep policy. Students attempting 1-year transfers must be strongly cautioned against extreme credit overloading in spring terms to avoid severe burnout or rescinded admissions.
+                    </p>
+                </div>
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+                    <h4 class="font-bold text-[#00356B] text-base mb-2">🏫 Dual Enrollment & High School Outreach</h4>
+                    <p class="text-sm text-slate-700 leading-relaxed">
+                        High school students taking college courses must be explicitly advised that grades earned follow them on permanent UC transfer transcripts and affect major prep GPAs. Coursework with C grades or higher cannot be repeated to raise GPAs.
+                    </p>
+                </div>
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+                    <h4 class="font-bold text-[#00356B] text-base mb-2">🔬 STEM & SEM Division</h4>
+                    <p class="text-sm text-slate-700 leading-relaxed">
+                        UCSB is adding Actuarial Science and Data Science to selective major reviews (Fall 2027). The system-wide Biological Sciences UCP consolidation (combining 4 bio tracks into 1) requires updated local degree audit tracking maps.
+                    </p>
+                </div>
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+                    <h4 class="font-bold text-[#00356B] text-base mb-2">🎯 Transfer Center & Career Pathways</h4>
+                    <p class="text-sm text-slate-700 leading-relaxed">
+                        Actively promote non-impacted major options and alternative degree pathways using UCI and UCR major mapping tools during workshops to raise overall Cerritos student UC admission rates.
+                    </p>
+                </div>
+            </div>
+
+            <!-- CERRITOS SUB-SECTION 3: ACTION ITEMS MATRIX -->
+            <div id="cerritos-actions-panel" class="hidden bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <h4 class="font-bold text-[#00356B] text-base mb-3">📌 Categorized Action Items</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                    <div class="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                        <strong class="text-blue-900 block font-bold mb-1">👤 Follow Up Personally</strong>
+                        <ul class="list-disc list-inside text-xs text-slate-700 space-y-1">
+                            <li>Bookmark 2026 Quick Reference Guide to UC Admissions & A–G/CalGETC Intersections.</li>
+                            <li>Register for webinars: UCSD Insights (Sept 22/Nov 17), UCSB Theater Chat (Oct 2), UCR Summit (Feb 4).</li>
+                        </ul>
+                    </div>
+                    <div class="p-4 bg-emerald-50 rounded-lg border border-emerald-200">
+                        <strong class="text-emerald-900 block font-bold mb-1">📢 Share with Colleagues</strong>
+                        <ul class="list-disc list-inside text-xs text-slate-700 space-y-1">
+                            <li>Distribute UCI's Fall 2028 TAG removal list to counseling staff for long-term planners.</li>
+                            <li>Share UC Davis's strict zero-missing-course policy with STEM and Articulation counselors.</li>
+                        </ul>
+                    </div>
+                    <div class="p-4 bg-purple-50 rounded-lg border border-purple-200">
+                        <strong class="text-purple-900 block font-bold mb-1">🏛️ Discuss with Campus Leadership</strong>
+                        <ul class="list-disc list-inside text-xs text-slate-700 space-y-1">
+                            <li>Evaluate forming institutional pipeline with UC Merced for ADT Guarantee & $4k award.</li>
+                            <li>Discuss dual enrollment transcript auditing protocols with Admissions & Records.</li>
+                        </ul>
+                    </div>
+                    <div class="p-4 bg-amber-50 rounded-lg border border-amber-200">
+                        <strong class="text-amber-900 block font-bold mb-1">🔍 Research & Policy Clarification</strong>
+                        <ul class="list-disc list-inside text-xs text-slate-700 space-y-1">
+                            <li>Cross-check ASSIST.org articulations against UCSD/UCSB selective major sites.</li>
+                            <li>Review CalGETC partial certification guidelines (verify missing courses outside Area 1 & 2).</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==================== SECTION 5: Q&A & RESOURCES ==================== -->
+        <section id="tab-qa" class="hidden space-y-6">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <h2 class="text-2xl font-bold text-[#00356B] mb-2 flex items-center gap-2">
+                    <span>❓</span> Consolidated Q&A & Resource Directory
+                </h2>
+                <p class="text-slate-600 text-sm">
+                    All session Q&A, transcript queries, and pre-submitted questions synthesized and organized by status, alongside official UC contact details and web resources.
+                </p>
+
+                <!-- FILTER BUTTONS FOR Q&A -->
+                <div class="flex flex-wrap gap-2 mt-4">
+                    <button onclick="filterQA('ALL')" class="qa-filter-btn px-3 py-1.5 text-xs font-bold rounded-lg bg-[#00356B] text-white">All Questions</button>
+                    <button onclick="filterQA('Answered')" class="qa-filter-btn px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200">Answered</button>
+                    <button onclick="filterQA('Partially Answered')" class="qa-filter-btn px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200">Partially Answered</button>
+                    <button onclick="filterQA('Unanswered')" class="qa-filter-btn px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200">Unanswered / Clarification</button>
+                    <button onclick="filterQA('Cerritos Question')" class="qa-filter-btn px-3 py-1.5 text-xs font-semibold rounded-lg bg-emerald-100 text-emerald-800 hover:bg-emerald-200">Cerritos Specific Questions</button>
+                </div>
+            </div>
+
+            <!-- Q&A ACCORDION LIST -->
+            <div id="qa-container" class="space-y-3">
+                <!-- JS dynamically populates Q&A -->
+            </div>
+
+            <!-- RESOURCES & CONTACTS DIRECTORY -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 mt-6">
+                <h3 class="text-lg font-bold text-[#00356B] mb-4 flex items-center gap-2">
+                    <span>📇</span> UC System & Campus Contact Directory
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-xs">
+                    <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+                        <strong class="text-[#00356B] block text-sm font-bold mb-1">UC System-wide (UCOP)</strong>
+                        <p class="text-slate-600">Presenter: Angelica Moore</p>
+                        <p class="text-slate-600">Policy Email: <code class="bg-slate-200 px-1 rounded">AskUC@ucop.edu</code></p>
+                    </div>
+                    <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+                        <strong class="text-[#00356B] block text-sm font-bold mb-1">UC Berkeley</strong>
+                        <p class="text-slate-600">Presenter: John Marfield (AVC & Director)</p>
+                        <p class="text-slate-600">Event: College Info Day (Oct 24, 2026)</p>
+                    </div>
+                    <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+                        <strong class="text-[#00356B] block text-sm font-bold mb-1">UC Davis</strong>
+                        <p class="text-slate-600">Presenter: Malisa Lee (Vice Provost)</p>
+                        <p class="text-slate-600">Resources: <code class="bg-slate-200 px-1 rounded">viewbook.ucdavis.edu</code></p>
+                    </div>
+                    <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+                        <strong class="text-[#00356B] block text-sm font-bold mb-1">UC Irvine</strong>
+                        <p class="text-slate-600">Presenter: Bryan Jue (Exec. Director)</p>
+                        <p class="text-slate-600">Counselors: <code class="bg-slate-200 px-1 rounded">admissions.uci.edu/counselors</code></p>
+                    </div>
+                    <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+                        <strong class="text-[#00356B] block text-sm font-bold mb-1">UCLA</strong>
+                        <p class="text-slate-600">Presenter: Ffiona Rees (Exec. Director)</p>
+                        <p class="text-slate-600">Org: WACAC Counselor Network</p>
+                    </div>
+                    <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+                        <strong class="text-[#00356B] block text-sm font-bold mb-1">UC Merced</strong>
+                        <p class="text-slate-600">Presenter: Dustin Noji (Director)</p>
+                        <p class="text-slate-600">Outreach: Educator Tour (Feb 2027)</p>
+                    </div>
+                    <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+                        <strong class="text-[#00356B] block text-sm font-bold mb-1">UC Riverside</strong>
+                        <p class="text-slate-600">Presenter: Veronica Zendejas (Exec. Dir.)</p>
+                        <p class="text-slate-600">Chatbot Text: <code class="bg-slate-200 px-1 rounded">(909) 323-0887</code></p>
+                    </div>
+                    <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+                        <strong class="text-[#00356B] block text-sm font-bold mb-1">UC San Diego</strong>
+                        <p class="text-slate-600">Presenter: Azizi James (Assoc. Director)</p>
+                        <p class="text-slate-600">Contact: <code class="bg-slate-200 px-1 rounded">admissions.ucsd.edu/contact</code></p>
+                    </div>
+                    <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+                        <strong class="text-[#00356B] block text-sm font-bold mb-1">UC Santa Barbara</strong>
+                        <p class="text-slate-600">Presenter: Cuca Acosta (Exec. Director)</p>
+                        <p class="text-slate-600">YouTube: <code class="bg-slate-200 px-1 rounded">youtube.com/ucsb4me</code></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==================== SECTION 6: QUICK REFERENCE INDEX ==================== -->
+        <section id="tab-index" class="hidden space-y-6">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <h2 class="text-2xl font-bold text-[#00356B] mb-2 flex items-center gap-2">
+                    <span>🔍</span> Quick Reference Master Index
+                </h2>
+                <p class="text-slate-600 text-sm mb-4">
+                    Filterable quick lookup table summarizing campus initiatives, key takeaways, and potential Cerritos College relevance.
+                </p>
+
+                <input type="text" id="index-search" oninput="renderIndexTable()" placeholder="Search index by campus, topic, or keyword..." class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-[#00356B] focus:border-[#00356B] mb-4">
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-sm">
+                        <thead>
+                            <tr class="bg-[#00356B] text-white border-b border-slate-300">
+                                <th class="p-3">Campus</th>
+                                <th class="p-3">Topic</th>
+                                <th class="p-3">Program / Practice</th>
+                                <th class="p-3">Key Takeaway</th>
+                                <th class="p-3">Potential Cerritos Relevance</th>
+                            </tr>
+                        </thead>
+                        <tbody id="index-table-body" class="divide-y divide-slate-200 bg-white">
+                            <!-- JS populates table -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 text-slate-400 text-xs py-6 mt-12 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 text-center space-y-2">
+            <p>UC Ensuring Transfer Success (ETS) 2026 Master Debrief & Strategic Reference Document</p>
+            <p class="text-slate-500">Synthesized from session transcripts, official slides, Q&A logs, and personal notes. Formatted for Cerritos College Transfer Center & Counseling Faculty.</p>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // MASTER DATA STRUCTURE FOR CAMPUSES
+        const campusData = {
+            UCOP: {
+                name: "University of California System-wide (UCOP)",
+                categories: {
+                    "Programs, Initiatives & Practices": [
+                        "<strong>Dual Admission Program Sunsetting:</strong> The UC Dual Admission pilot (established Fall 2023 for select non-admitted first-year applicants) will sunset effective January 2027. Data showed limited student participation and enrollment impact, proving that existing transfer routes (TAG, campus advising, CCC partnerships) remain the most effective.",
+                        "<strong>Transition Plan:</strong> Fall 2026 first-year applicants meeting dual admission parameters will receive an early outreach email highlighting UC transfer resources. No opt-in is required, and data sharing via UC TAP will cease. Existing cohorts (2024 and 2025) will continue receiving transfer prep programming, newsletters, and 1-on-1 appointments.",
+                        "<strong>Transfer Admission Guarantee (TAG) Growth:</strong> TAG submissions system-wide grew 34% over 5 years (from ~16,000 in 2022 to 21,400 in 2026). While TAG provides security, the majority of admitted transfer students are admitted without a TAG.",
+                        "<strong>Associate Degree for Transfer (ADT) Pilot Expansion:</strong> The 2026–27 ADT pilot between UCLA and 10 Southern California Community Colleges across 8 majors will expand to at least 5 additional UC campuses (Irvine, Merced, Riverside, Santa Barbara, Santa Cruz) by 2028–29."
+                    ],
+                    "AI/Technology": [
+                        "<strong>Application Integrity Policy:</strong> Generative AI tools (e.g., ChatGPT) are recognized as helpful ONLY for early writing stages (brainstorming, outlining, organizing thoughts, or polishing final versions). Personal Insight Question (PIQ) responses relying heavily or entirely on AI-generated text violate the UC Statement of Application Integrity.",
+                        "<strong>Human Review & Automated Screening:</strong> The UC system does NOT use AI tools to review PIQs or make automated pre-admission decisions. AI is utilized system-wide solely for backend rules-based workflow processing. Regular human audits are conducted to screen for missing, false, or misleading information."
+                    ],
+                    "Academic Planning & Transfer": [
+                        "<strong>Biological Sciences UCP Consolidation:</strong> Effective Fall 2027, the four individual biology transfer pathways (Biochemistry, Biology, Cell Biology, Molecular Biology) consolidate into a single Biological Sciences UC Transfer Pathway (UCP). Course requirements remain identical.",
+                        "<strong>CalGETC & Language Competency:</strong> CalGETC is not an admission requirement. Optional Language Other Than English (LOTE) certification is still encouraged. Partial CalGETC certification remains permitted for UC transfers (missing no more than 2 courses, provided missing courses are NOT from Area 1 English or Area 2 Math). Note: UC does not observe catalog rights.",
+                        "<strong>Dual Enrollment Policy:</strong> All UC-transferable coursework completed during high school is factored into the transfer GPA. Coursework with grades of C or higher cannot be repeated. Unreported high school college courses violate application rules. A new downloadable resource, A–G and Cal-GETC Intersections, maps CCC courses to high school A–G requirements."
+                    ],
+                    "Contacts/Presenters": [
+                        "<strong>Presenter:</strong> Angelica Moore (UCOP)",
+                        "<strong>System-wide Policy Email:</strong> AskUC@ucop.edu"
+                    ]
+                }
+            },
+            UCB: {
+                name: "UC Berkeley (UCB)",
+                categories: {
+                    "Results, Data or Outcomes": [
+                        "<strong>Applicant & Admit Statistics:</strong> Received 26,223 transfer applications; 5,250 admitted; 20% admit rate; middle 50% GPA range of 3.65–4.00; projected enrollment of 2,831. Total campus applications exceeded 159,000.",
+                        "<strong>Yield & Waitlist:</strong> Achieved an exceptionally high yield rate (~65%) among California residents. 1,115 waitlist opt-ins yielded 65 waitlist admits (primarily domestic non-resident and international applicants)."
+                    ],
+                    "Programs, Initiatives & Practices": [
+                        "<strong>Native American Thriving Initiatives:</strong> First UC campus to host College Horizons, bringing 121 Native American and Alaska Native high school students and 60+ college representatives to campus for a 5-day program.",
+                        "<strong>Outreach Programs:</strong> Expanded virtual engagement via UC Berkeley Unlocked application workshops, alongside regional counselor events in Los Angeles, Claremont, Merced, and San Diego."
+                    ],
+                    "Tools & Resources": [
+                        "<strong>Housing Facilities:</strong> Offers a 1-year housing guarantee for transfer students.",
+                        "<strong>Anchor House:</strong> Dedicated 800-bed transfer-only residence hall located 3 blocks from Downtown Berkeley BART.",
+                        "<strong>Bancroft-Fulton Housing:</strong> 23-story high-rise with a 500-seat dining commons opening Fall 2028.",
+                        "<strong>Heumann House:</strong> 11-story residence hall on former People's Park site featuring extensive disability accommodations, named after Judith Heumann.",
+                        "<strong>Academic Facilities:</strong> Opened CDSS Gateway (College of Computing, Data Science, and Society for AI research); completed Moffitt Library renovation (expanded Free Speech Movement Cafe, sleeping pods, 500 extra seats, maker space); Baker Climate Ingenuity Hub and Heathcock Hall opening 2027–28."
+                    ],
+                    "Contacts/Presenters": [
+                        "<strong>Presenter:</strong> John Marfield, Assistant Vice Chancellor and Director of Undergraduate Admissions",
+                        "<strong>Upcoming Event:</strong> College Information Day & UC Berkeley Showcase — Saturday, October 24, 2026 (9:00 AM – 3:00 PM), co-hosted with East Bay Solano County Consortium."
+                    ]
+                }
+            },
+            UCD: {
+                name: "UC Davis (UCD)",
+                categories: {
+                    "Results, Data or Outcomes": [
+                        "<strong>Applicant & Admit Statistics:</strong> 17,466 transfer applications; 10,107 admitted; 57.9% admit rate; target enrollment of 2,725 (tracking to enroll ~3,000); middle 50% GPA range of 3.46–3.90. Waitlist: 1,181 opt-ins, 0 waitlist admits.",
+                        "<strong>Demographics:</strong> 32.5% underrepresented, 42.4% first-gen, 39.3% limited income."
+                    ],
+                    "Academic Planning & Transfer": [
+                        "<strong>STRICT MAJOR PREPARATION POLICY CHANGE:</strong> Historically, UC Davis permitted transfer applicants to be missing one required major preparation course. Effective immediately, zero missing courses are allowed. All required major prep must be completed prior to transfer, or admission contracts will be rescinded.",
+                        "<strong>Selective Majors:</strong> Includes all majors in the College of Biological Sciences and College of Engineering; CAES majors (Animal Biology, Animal Science, Biotechnology, Managerial Economics, Viticulture & Enology, Wildlife, Fish & Conservation Biology); Letters & Science majors (Applied Math, Applied Physics, Data Science, Economics, Mathematics, Mathematical Analytics & Ops Research, Mathematical & Scientific Computation, Physics, Psychology, Statistics); and Graduate School of Management (Business).",
+                        "<strong>Business Major Alternate Policy:</strong> Business major applicants are evaluated for Economics or Managerial Economics as alternate choices if selected as an alternate major on the application."
+                    ],
+                    "Tools & Resources": [
+                        "<strong>Housing:</strong> 2-year housing guarantee for transfer students. Sierra Hall opens November 2027 adding ~500 beds.",
+                        "<strong>New Facilities:</strong> Renamed the UC Davis Whale School of Veterinary Medicine following a $120M donation. The Resnick Center for Agricultural Innovation opened Summer 2026, housing the Wonderful Scholars Center (supporting 50+ students)."
+                    ],
+                    "Contacts/Presenters": [
+                        "<strong>Presenter:</strong> Malisa Lee, Vice Provost for Enrollment Management (substituting for Robert Penman)",
+                        "<strong>Web Resources:</strong> viewbook.ucdavis.edu, map.ucdavis.edu"
+                    ]
+                }
+            },
+            UCI: {
+                name: "UC Irvine (UCI)",
+                categories: {
+                    "Results, Data or Outcomes": [
+                        "<strong>Applicant & Admit Statistics:</strong> 27,038 transfer applications; 9,839 admitted; 36% admit rate; projected enrollment 3,040. Waitlist: 2,274 offers / 22 admits. Appeals: 578 received / 31 admits.",
+                        "<strong>Demographics & Yield:</strong> 41% first-gen, 50% low-income, 431 Regent Scholars, students from 112 CCCs. Ranked #1 across the UC system for total TAG applications (+35% growth)."
+                    ],
+                    "Academic Planning & Transfer": [
+                        "<strong>FALL 2028 TAG REMOVALS:</strong> UCI is removing 12 popular majors from TAG effective Fall 2028: Biological Sciences, Ecology & Evolutionary Biology, Biology/Education, Aerospace Engineering, Computer Engineering, Electrical Engineering, Mechanical Engineering, Psychology B.A., Psychology B.S., Business Economics, Cognitive Sciences, Economics, Quantitative Economics.",
+                        "<strong>Reasoning:</strong> 57% of transfer applicants apply to only 10 majors, causing severe capacity constraints. Over 50+ other majors remain TAG-eligible."
+                    ],
+                    "Programs, Initiatives & Practices": [
+                        "<strong>Paul Merage School of Business 4+1 Accelerated Pathway:</strong> Accelerated degree pathway allowing transfers with completed prep/summer units to transition into Master's programs (Accountancy, Finance, Business Analytics, Innovation/Entrepreneurship, Management) with eligibility for a $10,000 scholarship."
+                    ],
+                    "Tools & Resources": [
+                        "<strong>Majors Quiz:</strong> Online interactive tool designed to guide students toward non-impacted alternative majors within their discipline.",
+                        "<strong>Counselor Resources:</strong> Downloadable publications, data requests, and event booking at admissions.uci.edu/counselors."
+                    ],
+                    "Contacts/Presenters": [
+                        "<strong>Presenter:</strong> Bryan Jue, Executive Director for Admissions"
+                    ]
+                }
+            },
+            UCLA: {
+                name: "UCLA",
+                categories: {
+                    "Results, Data or Outcomes": [
+                        "<strong>Applicant & Admit Statistics:</strong> 30,678 transfer applications (+9% increase; first U.S. university to cross 30,000 transfer apps); 6,839 admitted; 22% overall admit rate; 4,025 fall enrollment target (enrolled 4,188). Average admitted GPA: 3.85; 40% first-gen; 35% low income.",
+                        "<strong>Admit Breakdown by College:</strong> Letters & Science (26% admit rate); Engineering (12% admit rate; observed shift from CS to Mechanical, Civil, Electrical); Music (14%); Arts & Architecture (8%); Nursing (7%); Theater, Film & TV (4%)."
+                    ],
+                    "Programs, Initiatives & Practices": [
+                        "<strong>ADT Pilot Program Outcomes:</strong> UCLA piloted an ADT pathway with 10 Southern California community colleges across 8 majors. Applicants in the pilot achieved a 65% admit rate compared to UCLA's general 22% transfer admit rate.",
+                        "<strong>Application Integrity & Dual Enrollment Checking:</strong> UCLA audited applicant records against the National Student Clearinghouse. Unreported high school dual enrollment coursework was flagged, resulting in contact and potential rescission. Dual enrollment grades directly impact transfer GPAs.",
+                        "<strong>Applicant Concentration Issue:</strong> Over 50% of applicants applied to only 9 of UCLA's 140 available majors."
+                    ],
+                    "Academic Planning & Transfer": [
+                        "<strong>New Majors:</strong> Digital Humanities B.A.; Arts & Architecture B.A. (tracks in Computational Art, Design, Games).",
+                        "<strong>New Minors:</strong> Health Humanities, Real Estate, Sports Leadership & Management.",
+                        "<strong>Special Context:</strong> UCLA campus will serve as the Olympic Village for the 2028 Summer Olympics."
+                    ],
+                    "Contacts/Presenters": [
+                        "<strong>Presenter:</strong> Ffiona Rees, Executive Director for Undergraduate Admission",
+                        "<strong>Recommended Organization:</strong> WACAC (Western Association for College Admission Counseling) — free membership for public school counselors/CBOs."
+                    ]
+                }
+            },
+            UCM: {
+                name: "UC Merced (UCM)",
+                categories: {
+                    "Results, Data or Outcomes": [
+                        "<strong>Applicant & Admit Statistics:</strong> 6,635 transfer applications (+28.5% increase); 5,089 admitted; 67.5% admit rate; 480 estimated enrollment (>65% increase in transfer enrollment). Demographics: 56.5% first-gen, 87.9% Pell-eligible.",
+                        "<strong>Early Decision Release:</strong> Released transfer decisions as early as March 3, 2026, driven by pathway pilots in Engineering and SSHA."
+                    ],
+                    "Programs, Initiatives & Practices": [
+                        "<strong>UC Merced ADT Initiative Launch:</strong> Guaranteed transfer admission for CCC students completing an approved ADT in the same major with a junior-level transfer GPA.",
+                        "<strong>Approved ADT Majors:</strong> Biological Sciences B.S./B.A., Anthropology B.A., Liberal Studies (Elementary Education ADT), History B.A., Political Science B.A., Critical Race & Ethnic Studies B.A. (Social Justice ADT).",
+                        "<strong>Key Benefits:</strong> Exempt from extra lower-division GE; degree capped at 60 UCM units post-transfer; $4,000/year renewable scholarship for up to 2 years ($8,000 total). Applies broadly to all CCCs."
+                    ],
+                    "Academic Planning & Transfer": [
+                        "<strong>New Majors:</strong> Artificial Intelligence B.S. (open to transfers Fall 2027), Computer Science B.S. (entry allowed after Pre-Calculus), Business Administration B.A., Accounting B.S., Neuroscience B.A./B.S., Science Technology & Ethics B.S."
+                    ],
+                    "Tools & Resources": [
+                        "<strong>Campus Updates:</strong> Full-time NCAA Division II member; Transfer Promise housing at market rate; experimental Smart Farm.",
+                        "<strong>Counselor Outreach:</strong> Educator Tour scheduled for February 2027. Sign up for the Counselor Resource ListServe."
+                    ],
+                    "Contacts/Presenters": [
+                        "<strong>Presenter:</strong> Dustin Noji, Director of Admissions"
+                    ]
+                }
+            },
+            UCR: {
+                name: "UC Riverside (UCR)",
+                categories: {
+                    "Results, Data or Outcomes": [
+                        "<strong>Applicant & Admit Statistics:</strong> 14,967 transfer applications; 10,457 admitted; 70% admit rate; 2,012 enrolled; 81 waitlist admits; 28 appeal admits. Demographics: 53% first-gen, 41% limited income.",
+                        "<strong>TAG Policy:</strong> 11% increase in TAG applications. UCR maintains TAG for ALL majors, including Computer Science and Psychology. TAG GPA requirements are not being raised."
+                    ],
+                    "Academic Planning & Transfer": [
+                        "<strong>New Majors (Fall 2027):</strong> Computer Science with Applications (Tracks in Business, Health, Psychology); Genetics & Molecular Biotechnology; Education, Society & Human Development with integrated Multiple Subject Teaching Credential (2-year transfer pathway; requires an additional interview process).",
+                        "<strong>Most Popular Majors:</strong> Business Administration (#1), Psychology, Biology, Computer Science, Sociology, Mechanical Engineering, Political Science, Electrical Engineering, Economics."
+                    ],
+                    "Tools & Resources": [
+                        "<strong>Facilities & Technology:</strong> Undergraduate Teaching & Learning Facility opens Fall 2026 (100,000+ sq. ft., 1,700 capacity); 24/7 Chatbot text line at (909) 323-0887 featuring live student chats in the afternoon.",
+                        "<strong>Transfer Prep Page:</strong> Launching Road to Riverside and RSTEP transfer prep initiatives alongside a new student portal."
+                    ],
+                    "Contacts/Presenters": [
+                        "<strong>Presenter:</strong> Veronica Zendejas, Executive Director for Undergraduate Admissions",
+                        "<strong>Events:</strong> Virtual Discover UCR Preview Week (Nov 16–20, 2026); Community College Counselor Summit (Feb 4, 2027)."
+                    ]
+                }
+            },
+            UCSD: {
+                name: "UC San Diego (UCSD)",
+                categories: {
+                    "Results, Data or Outcomes": [
+                        "<strong>Applicant & Admit Statistics:</strong> 26,000+ transfer applications; 12,000+ admits; 47% admit rate; 596 waitlist admits; ~4,000 target enrollment. Demographics: 38% CA first-gen, 32% low-income."
+                    ],
+                    "Academic Planning & Transfer": [
+                        "<strong>Selective Majors:</strong> Data Science, Bioengineering, Chemical Engineering, Computer Science & Engineering, Electrical & Computer Engineering, Mechanical & Aerospace Engineering, Public Health.",
+                        "<strong>New/Updated Majors (Fall 2026):</strong> Business Data Science, Clinical Psychology, Experimental Psychology.",
+                        "<strong>Articulation & Major Prep Verification:</strong> ASSIST.org lists all articulated courses, which can be broader than required major prep. Transfer applicants MUST cross-reference UCSD’s Major Prep website to verify exact required courses for admission consideration. Transfers cannot be admitted as undeclared."
+                    ],
+                    "Tools & Resources": [
+                        "<strong>System & Facilities:</strong> Launched the Triton Student System (TSS) in Summer 2026. Opening Triton Center Fall 2026 (centralizing student support, health/mental health, and alumni center); renovated Roots Vegan Eatery and Pines Dining Hall.",
+                        "<strong>Counselor Webinars:</strong> Counselor Insights Webinars (Sept 22, Nov 17); In-Service Training (Oct 22)."
+                    ],
+                    "Contacts/Presenters": [
+                        "<strong>Presenter:</strong> Azizi James, Associate Director for Outreach Recruitment and Yield",
+                        "<strong>Contact:</strong> admissions.ucsd.edu/contact, admissions.ucsd.edu/counselors"
+                    ]
+                }
+            },
+            UCSB: {
+                name: "UC Santa Barbara (UCSB)",
+                categories: {
+                    "Results, Data or Outcomes": [
+                        "<strong>Applicant & Admit Statistics:</strong> 18,915 transfer applications; 11,888 admits; 63% admit rate; 3.68 average GPA; ~2,175 target enrollment. Waitlist: 260 admits; Appeals: 61 admits.",
+                        "<strong>TAG Stats:</strong> 4,226 TAG submissions; 3,864 TAG/UCSB applicants; 2,822 TAG admits. Unsuccessful TAG applications were primarily due to missing selective major requirements."
+                    ],
+                    "Academic Planning & Transfer": [
+                        "<strong>NEW SELECTIVE MAJORS (Fall 2027):</strong> Actuarial Science; Financial Math & Statistics; Statistics & Data Science.",
+                        "<strong>Major Updates:</strong> Theater B.A. (Design emphasis) requires a portfolio submission starting Fall 2027 (due early January). Discontinued Chinese and Japanese majors. Renamed Asian Studies to East Asian Studies, CCS Computing to Computer Science, and Classics to Ancient Greek and Roman Philosophy.",
+                        "<strong>Future Majors:</strong> Artificial Intelligence B.S. and Education & Society B.A. launching Fall 2029. Minors added in Environmental Humanities, Child Studies, Health Humanities."
+                    ],
+                    "Tools & Resources": [
+                        "<strong>Housing & Athletics:</strong> 2-year housing guarantee. San Benito apartments on track for Fall 2027 (2,224 beds). Santa Rosa Residence Hall opens Fall 2028. Family student housing application opens upon UC app submission (6–8 month waitlist). Athletics moving to West Coast Conference (WCC) in 2027–28.",
+                        "<strong>Media & Events:</strong> Official YouTube channel (youtube.com/ucsb4me) with application, PIQ, and TAG playlists. UC Counselor Chat on Theater Portfolios: October 2, 2026."
+                    ],
+                    "Contacts/Presenters": [
+                        "<strong>Presenter:</strong> Cuca Acosta, Executive Director of Admissions"
+                    ]
+                }
+            },
+            UCSC: {
+                name: "UC Santa Cruz (UCSC)",
+                categories: {
+                    "Results, Data or Outcomes": [
+                        "<strong>Applicant & Admit Statistics:</strong> 13,235 transfer applications; 9,038 admitted; 68.3% admit rate; 3.47 average GPA; 1,275 enrollments. Demographics: 41% first-gen, 43% low-income. Ranked #17 nationwide for Best Financial Aid (Princeton Review)."
+                    ],
+                    "Programs, Initiatives & Practices": [
+                        "<strong>Degree-Defining Experiences Program:</strong> Immersive experiential field courses (Lick Observatory overnight visits, research SCUBA certification, cancer bioinformatics research, student-built satellite deployed from ISS).",
+                        "<strong>Pister Leadership Scholarship:</strong> $20,000 scholarship over 2 years for high-achieving transfer students with socioeconomic challenges from 13 partner CCCs.",
+                        "<strong>ADT & Honors:</strong> Actively pursuing ADT transfer pathways; campus honors program launching soon."
+                    ],
+                    "Tools & Resources": [
+                        "<strong>Housing Updates:</strong> 2-year housing guarantee for transfer students. Delaware Avenue Project opens Fall 2026 (350+ upper-division beds at 20% below market rate). Family Student Housing opens 2026–27 (120 apartments + childcare center for 140 children). Kresge College Renewal adds 993 beds across 2026–28.",
+                        "<strong>Facilities:</strong> Bay Tree Building renovation re-opening Fall 2027 (wellness space, study/dining spaces)."
+                    ],
+                    "Contacts/Presenters": [
+                        "<strong>Presenter:</strong> Michael Cervantes, Senior Associate Director of Admissions"
+                    ]
+                }
+            }
+        };
+
+        // Q&A DATA
+        const qaData = [
+            {
+                q: "What does ADT stand for?",
+                a: "Associate Degree for Transfer.",
+                status: "Answered",
+                source: "General Session Q&A"
+            },
+            {
+                q: "Is the UC Merced ADT Scholarship $4,000 per year?",
+                a: "Yes, $4,000 per year for up to two years ($8,000 total award).",
+                status: "Answered",
+                source: "UC Merced (Dustin Noji)"
+            },
+            {
+                q: "For UCI's 4+1 business program, is it a 2+1 for transfer students?",
+                a: "Yes, depending on how much coursework the student enters with. Students should consult advisors during summer orientation to plan.",
+                status: "Answered",
+                source: "UC Irvine (Bryan Jue)"
+            },
+            {
+                q: "Does UCSD’s Major Prep Information website match ASSIST.org?",
+                a: "ASSIST.org lists all articulated courses (which can be broader), whereas UCSD's Major Prep website outlines the exact required courses for admission consideration. Students must cross-reference both.",
+                status: "Answered",
+                source: "UC San Diego (Azizi James)"
+            },
+            {
+                q: "Is UCR raising its TAG GPA requirements due to application growth?",
+                a: "No, UCR is not planning to raise TAG GPA requirements at this time. Requirements remain major-dependent.",
+                status: "Answered",
+                source: "UC Riverside (Veronica Zendejas)"
+            },
+            {
+                q: "Do UCs use AI to screen application essay responses (PIQs)?",
+                a: "No. Application reviews are conducted entirely by humans. AI is used solely for backend rules-based processing efficiency.",
+                status: "Answered",
+                source: "UCOP & UC Berkeley (John Marfield)"
+            },
+            {
+                q: "Which specific majors will be included in UCR's ADT initiative?",
+                a: "UCR faculty are currently finalizing the exact major list; updates will be distributed via counselor bulletins soon.",
+                status: "Partially Answered",
+                source: "UC Riverside"
+            },
+            {
+                q: "What specific portfolio requirements will UCSB require for the Theater B.A. (Design) starting Fall 2027?",
+                a: "Details will be formally addressed during the UCSB Counselor Chat on October 2, 2026.",
+                status: "Unanswered",
+                source: "UC Santa Barbara"
+            },
+            {
+                q: "How will Cerritos Counseling update art maps to ensure students applying to UC Davis have 100% of major prep finished, given UCD's zero-missing-course policy?",
+                a: "Requires immediate local Cerritos articulation & counseling review prior to Spring registration.",
+                status: "Cerritos Question",
+                source: "Cerritos Counseling Internal"
+            },
+            {
+                q: "Which local high schools participating in Cerritos Dual Enrollment need updated advising regarding UC GPA calculation impacts?",
+                a: "Requires coordination between Cerritos High School Outreach and partner district administration.",
+                status: "Cerritos Question",
+                source: "Cerritos Dual Enrollment Office"
+            }
+        ];
+
+        // INDEX MASTER TABLE DATA
+        const indexData = [
+            { campus: "UCOP", topic: "Admissions Policy", program: "AI in PIQs", takeaway: "AI allowed for brainstorming only; authentic student voice required.", cerritos: "Update PIQ workshop guidance." },
+            { campus: "UCOP", topic: "System Program", program: "Dual Admission Sunset", takeaway: "Dual admission program ends Jan 2027; refocus on TAG/CCC pathways.", cerritos: "Re-center advising on TAG & ADT." },
+            { campus: "UC Merced", topic: "ADT / Transfer", program: "ADT Guarantee & $4k Award", takeaway: "Guaranteed admission + $4k/yr scholarship for specific ADTs.", cerritos: "High-value transfer option for Cerritos ADT graduates." },
+            { campus: "UC Davis", topic: "Policy Change", program: "Major Prep Requirements", takeaway: "Zero missing required courses allowed; offer rescinded if incomplete.", cerritos: "Ensure 100% prep completion prior to spring transfer." },
+            { campus: "UC Irvine", topic: "TAG Policy", program: "Fall 2028 TAG Exclusions", takeaway: "Removing 12 impacted majors (Bio, Engr, Psych, Econ) from TAG.", cerritos: "Adjust 2-year educational plans for class of 2028+." },
+            { campus: "UCLA", topic: "Outreach / ADT", program: "ADT Pilot Results", takeaway: "65% admit rate for ADT pilot applicants vs. 22% overall transfer rate.", cerritos: "Strong incentive to promote approved ADT pathways." },
+            { campus: "UC Riverside", topic: "Credential / Major", program: "Multiple Subject Credential", takeaway: "Integrated 2-year transfer B.A. + Multiple Subject Teaching Credential.", cerritos: "Excellent pathway for Cerritos Education majors." },
+            { campus: "UC San Diego", topic: "Technology / System", program: "Triton Student System", takeaway: "New student system live; major prep site overrides ASSIST.", cerritos: "Verify major prep on UCSD site, not just ASSIST." },
+            { campus: "UC Santa Barbara", topic: "Major Prep", program: "New Selective Majors", takeaway: "Actuarial Sci, Financial Math, Stats/Data Sci become selective in F27.", cerritos: "Update STEM advising tracking." },
+            { campus: "UC Santa Cruz", topic: "Housing / Aid", program: "Guarantees & Pister Award", takeaway: "2-year housing guarantee; $20k Pister scholarship for partner CCCs.", cerritos: "Promising financial option for low-income transfers." }
+        ];
+
+        // INITIALIZATION
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCampusDetail();
+            initCharts();
+            renderQAList(qaData);
+            renderIndexTable();
+        });
+
+        // TAB SWITCHING LOGIC
+        function switchTab(tabId) {
+            const tabs = ['overview', 'campuses', 'analytics', 'cerritos', 'qa', 'index'];
+            tabs.forEach(t => {
+                document.getElementById(`tab-${t}`).classList.add('hidden');
+                document.getElementById(`nav-${t}`).classList.remove('tab-active');
+            });
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+            document.getElementById(`nav-${tabId}`).classList.add('tab-active');
+        }
+
+        // CERRITOS SUB-TAB SWITCHING
+        function switchCerritosSubTab(subId) {
+            const subs = ['ideas', 'implications', 'actions'];
+            subs.forEach(s => {
+                document.getElementById(`cerritos-${s}-panel`).classList.add('hidden');
+                const btn = document.getElementById(`csub-${s}`);
+                btn.classList.remove('bg-[#005A36]', 'text-white');
+                btn.classList.add('text-slate-600');
+            });
+            document.getElementById(`cerritos-${subId}-panel`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`csub-${subId}`);
+            activeBtn.classList.add('bg-[#005A36]', 'text-white');
+            activeBtn.classList.remove('text-slate-600');
+        }
+
+        // CAMPUS DETAIL RENDERER
+        function renderCampusDetail() {
+            const campusKey = document.getElementById('campus-select').value;
+            const categoryFilter = document.getElementById('category-select').value;
+            const searchQuery = document.getElementById('campus-search').value.toLowerCase();
+            const container = document.getElementById('campus-detail-container');
+
+            const data = campusData[campusKey];
+            if (!data) return;
+
+            let html = `
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                    <div class="flex justify-between items-center border-b border-slate-200 pb-3 mb-4">
+                        <h3 class="text-xl font-bold text-[#00356B]">${data.name}</h3>
+                        <span class="text-xs font-semibold bg-blue-100 text-[#00356B] px-3 py-1 rounded-full">Campus Profile</span>
+                    </div>
+            `;
+
+            let hasContent = false;
+
+            for (const [catName, items] of Object.entries(data.categories)) {
+                if (categoryFilter !== 'ALL' && categoryFilter !== catName) continue;
+
+                const filteredItems = items.filter(item => item.toLowerCase().includes(searchQuery));
+                if (filteredItems.length === 0) continue;
+
+                hasContent = true;
+
+                html += `
+                    <div class="mb-5">
+                        <h4 class="text-sm font-bold text-slate-700 bg-slate-100 px-3 py-1.5 rounded-md mb-2 flex items-center gap-2">
+                            <span>📌</span> ${catName}
+                        </h4>
+                        <ul class="space-y-2 text-sm text-slate-700 pl-2">
+                `;
+
+                filteredItems.forEach(item => {
+                    html += `<li class="border-b border-slate-100 pb-2">${item}</li>`;
+                });
+
+                html += `</ul></div>`;
+            }
+
+            if (!hasContent) {
+                html += `<p class="text-sm text-slate-500 italic py-4">No information matching your selected category or search filter.</p>`;
+            }
+
+            html += `</div>`;
+            container.innerHTML = html;
+        }
+
+        // CHART.JS INITIALIZATION
+        let admitChartInstance = null;
+        let appVolumeChartInstance = null;
+
+        function initCharts() {
+            // Chart 1: Admit Rates
+            const ctx1 = document.getElementById('admitRateChart').getContext('2d');
+            admitChartInstance = new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: ['Berkeley', 'UCLA', 'Irvine', 'UCSD', 'Davis', 'UCSB', 'UCSC', 'Merced', 'Riverside'],
+                    datasets: [{
+                        label: 'Admit Rate (%)',
+                        data: [20, 22, 36, 47, 57.9, 63, 68.3, 67.5, 70],
+                        backgroundColor: [
+                            '#00356B', '#00356B', '#1B75BC', '#1B75BC', 
+                            '#FFB81C', '#FFB81C', '#005A36', '#005A36', '#005A36'
+                        ],
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: (ctx) => ` Admit Rate: ${ctx.raw}%`
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: { callback: (v) => v + '%' }
+                        }
+                    }
+                }
+            });
+
+            // Chart 2: App Volumes
+            const ctx2 = document.getElementById('appVolumeChart').getContext('2d');
+            appVolumeChartInstance = new Chart(ctx2, {
+                type: 'bar',
+                data: {
+                    labels: ['UCLA', 'Irvine', 'Berkeley', 'UCSD', 'UCSB', 'Davis', 'Riverside', 'UCSC', 'Merced'],
+                    datasets: [{
+                        label: 'Transfer Applications',
+                        data: [30678, 27038, 26223, 26000, 18915, 17466, 14967, 13235, 6635],
+                        backgroundColor: '#1B75BC',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        x: { beginAtZero: true }
+                    }
+                }
+            });
+        }
+
+        // Q&A FILTER & RENDER
+        function filterQA(status) {
+            document.querySelectorAll('.qa-filter-btn').forEach(btn => {
+                btn.classList.remove('bg-[#00356B]', 'text-white');
+                btn.classList.add('bg-slate-100', 'text-slate-700');
+            });
+            event.target.classList.add('bg-[#00356B]', 'text-white');
+
+            if (status === 'ALL') {
+                renderQAList(qaData);
+            } else {
+                const filtered = qaData.filter(item => item.status === status);
+                renderQAList(filtered);
+            }
+        }
+
+        function renderQAList(data) {
+            const container = document.getElementById('qa-container');
+            if (data.length === 0) {
+                container.innerHTML = `<div class="bg-white p-4 rounded-lg text-slate-500 text-sm italic">No questions found matching this filter.</div>`;
+                return;
+            }
+
+            let html = '';
+            data.forEach((item, idx) => {
+                let badgeColor = 'bg-blue-100 text-blue-800';
+                if (item.status === 'Partially Answered') badgeColor = 'bg-amber-100 text-amber-800';
+                if (item.status === 'Unanswered') badgeColor = 'bg-rose-100 text-rose-800';
+                if (item.status === 'Cerritos Question') badgeColor = 'bg-emerald-100 text-emerald-800';
+
+                html += `
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                        <div class="flex justify-between items-start gap-2 mb-2">
+                            <h4 class="font-bold text-slate-800 text-sm">Q: ${item.q}</h4>
+                            <span class="badge-pill ${badgeColor}">${item.status}</span>
+                        </div>
+                        <p class="text-xs text-slate-600 bg-slate-50 p-2.5 rounded-lg border border-slate-100 mb-2">
+                            <strong>Answer / Status:</strong> ${item.a}
+                        </p>
+                        <p class="text-[10px] text-slate-400 text-right">Source: ${item.source}</p>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        // QUICK REFERENCE INDEX RENDER
+        function renderIndexTable() {
+            const query = document.getElementById('index-search').value.toLowerCase();
+            const tbody = document.getElementById('index-table-body');
+
+            const filtered = indexData.filter(row => 
+                row.campus.toLowerCase().includes(query) ||
+                row.topic.toLowerCase().includes(query) ||
+                row.program.toLowerCase().includes(query) ||
+                row.takeaway.toLowerCase().includes(query) ||
+                row.cerritos.toLowerCase().includes(query)
+            );
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-slate-500 text-center text-sm italic">No index entries match your search.</td></tr>`;
+                return;
+            }
+
+            let html = '';
+            filtered.forEach(row => {
+                html += `
+                    <tr class="hover:bg-slate-50">
+                        <td class="p-3 font-bold text-[#00356B]">${row.campus}</td>
+                        <td class="p-3 text-slate-700">${row.topic}</td>
+                        <td class="p-3 font-semibold text-slate-800">${row.program}</td>
+                        <td class="p-3 text-slate-600">${row.takeaway}</td>
+                        <td class="p-3 font-medium text-[#005A36] bg-emerald-50/50">${row.cerritos}</td>
+                    </tr>
+                `;
+            });
+            tbody.innerHTML = html;
+        }
+    </script>
+</body>
+</html>
